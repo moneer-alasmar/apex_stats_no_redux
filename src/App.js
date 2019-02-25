@@ -1,25 +1,31 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Header from "./components/Header";
+import SearchBar from "./components/SearchBar";
+import apexAPI from "./apis/apex";
+import Player from "./components/Player";
 
 class App extends Component {
+  state = {
+    foundPlayer: null
+  };
+
+  onSubmit = async (player, platform) => {
+    const response = await apexAPI.get(`/${platform}/${player}`);
+    this.setState({ foundPlayer: response.data });
+  };
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div className="container">
+        <Header />
+        <div className="row">
+          <div className="col-md-3" />
+          <div className="col-md-6">
+            <SearchBar onSubmit={this.onSubmit} />
+            <Player player={this.state.foundPlayer} />
+          </div>
+          <div className="col-md-3" />
+        </div>
       </div>
     );
   }
